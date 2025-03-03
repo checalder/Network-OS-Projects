@@ -9,8 +9,10 @@ data = {"title": "Sample Post",
 
 response = requests.post(url, json=data)
 
-json = requests.get("https://jsonplaceholder.typicode.com/posts/101")
+
 
 print(f"Status Code: {response.status_code}")
 print("Response Body:", response.json())
+
+json = requests.get("https://jsonplaceholder.typicode.com/posts/101")
 print(json.json())
