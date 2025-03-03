@@ -1,7 +1,0 @@
-def get_ip(web_url):
-    ip = socket.gethostbyname(web_url)
-    print(ip)
-
-def traceroute(web_url):
-    route = subprocess.run(["tracert", web_url], capture_output=True, text=True)#runs a command on the shell as a process, capture output returns the stdout instead of sending it directly to tthe terminal, text makes the std out a string rather than bytecode
-    print(route.stdout)
