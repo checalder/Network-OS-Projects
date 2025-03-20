@@ -1,44 +1,59 @@
-import random as r
+import random as r  # Import the random module for generating transmission probabilities
 
-n = 5 # number of stations transmitting
-p = 0.2 # the probability each individual node will transmit 
-G = n * p #G = n * p so here G would be 0.5, the most efficient total probability of a transmission
-frame_times = 100000 # the number of frame transmission times we will run the algorithm to get more results
-successes = 0#how many successful transmissions we get
-
+# Define parameters for the Pure ALOHA simulation
+n = 5  # Number of stations transmitting
+p = 0.2  # Probability that each station transmits in a time slot
+G = n * p  # Traffic intensity G (expected number of transmission attempts per frame time)
+frame_times = 100000  # Number of frame transmission times to simulate
+successes = 0  # Counter for successful transmissions
 
 def pure_aloha(nodes):
-    transmissions = sum(1 for _ in range(nodes) if r.random() < p)# if random less than p, then transmit
-    if transmissions == 1:# returns true for a success with no collisions
-        return True
-    else:#false for a failure with either at least one collision or not transmissions at all
-        return False
+    """
+    Simulates the transmission process in Pure ALOHA.
+    
+    Parameters:
+        nodes (int): Number of transmitting stations.
+    
+    Returns:
+        bool: True if exactly one station transmits (successful transmission), False otherwise.
+    """
+    transmissions = sum(1 for _ in range(nodes) if r.random() < p)  # Count nodes that attempt transmission
+    return transmissions == 1  # Success occurs only if exactly one node transmits
 
+# Simulating multiple frame times
 i = 0
-while i < frame_times:#loop through however many frame times you want the test pool to be
-    if(pure_aloha(n) and pure_aloha(n)): # we run the algorithm twice as the vulnerability period is twice the frame transmission time, if there i
-        successes += 1#if there is a success, increment by 1
+while i < frame_times:
+    # Check for successful transmission in two consecutive frame times (vulnerability period is 2 frames)
+    if pure_aloha(n) and pure_aloha(n):
+        successes += 1  # Increment success counter
     i += 1
 
-efficiency = successes / frame_times # how many successes per frame transmission times
+# Compute efficiency of Pure ALOHA (successful transmissions per frame time)
+efficiency = successes / frame_times
 print(efficiency)
 
-def pure_aloha(n,p,frame_times):
-    #n is number of stations transmitting
-    #p is the probability each individual node will transmit 
-    #frame_times is the number of frame transmission times we will run the algorithm to get more results
+def pure_aloha_simulation(n, p, frame_times):
+    """
+    Runs a Pure ALOHA simulation with given parameters.
+    
+    Parameters:
+        n (int): Number of transmitting stations.
+        p (float): Probability of transmission per station per frame time.
+        frame_times (int): Number of frame times to simulate.
+    
+    Returns:
+        None: Prints efficiency of the protocol.
+    """
+    G = n * p  # Traffic intensity
+    successes = 0  # Counter for successful transmissions
 
-    G = n * p #G = n * p so here G would be 0.5, the most efficient total probability of a transmission
-    successes = 0#how many successful transmissions we get
+    for _ in range(frame_times):
+        transmissions = sum(1 for _ in range(n * 2) if r.random() < p)  # Simulating transmission attempts
+        if transmissions == 1:
+            successes += 1  # Successful transmission recorded
 
-    i = 0
-    while i < frame_times:
-        transmissions = sum(1 for _ in range(n * 2) if r.random() < p)# if random less than p, then transmit
-        if transmissions == 1:# returns true for a success with no collisions
-            successes += 1
-        i += 1
-
-    efficiency = successes / frame_times # how many successes per frame transmission times
+    efficiency = successes / frame_times  # Compute efficiency
     print(efficiency)
 
-pure_aloha(5,0.2,1000)
+# Running the Pure ALOHA simulation with 5 nodes, transmission probability 0.2, and 1000 frame times
+pure_aloha_simulation(5, 0.2, 1000)

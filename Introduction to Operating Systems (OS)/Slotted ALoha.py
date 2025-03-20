@@ -1,35 +1,45 @@
-import random
-import matplotlib.pyplot as plt
-import numpy as np
+import random  # Importing random module for probabilistic transmission
+import matplotlib.pyplot as plt  # Importing matplotlib for plotting results
+import numpy as np  # Importing NumPy for numerical operations
 
 def simulate_slotted_aloha(n_nodes, p, n_slots):
-    # n_nodes: number of nodes in the network
-    # p: probability of transmitting in a slot
-    # n_slots: number of slots to simulate
+    """
+    Simulates Slotted ALOHA protocol for network communication.
+    
+    Parameters:
+        n_nodes (int): Number of nodes in the network.
+        p (float): Probability of each node transmitting in a slot.
+        n_slots (int): Number of time slots to simulate.
+    
+    Returns:
+        float: Efficiency of the Slotted ALOHA protocol.
+    """
+    successes = 0  # Counter for successful transmissions
 
-    successes = 0 # Number of successful transmissions
-
-    # Loop over each slot in the simulation
+    # Iterate over each time slot
     for _ in range(n_slots):
-        # Each node transmits with probability p in a slot        
-        # only if a single node transmits in a slot, it is a success
-        # so say we have for each node 0.1, 0.5, 0.3, 0.2 the total 
-        
+        # Count the number of nodes that attempt transmission
         transmissions = sum(1 for _ in range(n_nodes) if random.random() < p)
-        # adds 1 to the sum if random.random() < p,
-    if transmissions == 1:# transmissions will be 2 as [0] and [3] are less than p (0.3) and so 
-        #we would not have a success in our example
-        successes += 1
-    # then the same loop will be repeated for the next slot and so forth until the n_slots are reached
+        
+        # A successful transmission occurs if exactly one node transmits
+        if transmissions == 1:
+            successes += 1
+    
+    # Compute efficiency as the ratio of successful transmissions to total slots
     efficiency = successes / n_slots
-    #then we see how many successes we had and can calculate efficienct
     return efficiency
 
-#here we are just plotting the efficiency of the slotted aloha for different values of p using matplotlib
-
+# Define the number of nodes in the network
 n_nodes = 50
+
+# Generate an array of transmission probabilities from 0 to 1
 ps = np.linspace(0, 1, 50)
+
+# Compute efficiency for different transmission probabilities
+# The efficiency curve will show how transmission probability affects Slotted ALOHA performance
 efficiencies = [simulate_slotted_aloha(n_nodes, p, 10000) for p in ps]
+
+# Plot efficiency against transmission probability
 plt.plot(ps, efficiencies, marker='o')
 plt.xlabel('Transmission Probability')
 plt.ylabel('Efficiency')
